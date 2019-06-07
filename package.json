@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@graphile-contrib/pg-simplify-inflector": "^5.0.0-beta.1",
+    "apollo-link-http": "^1.5.14",
     "apollo-server-express": "^2.6.2",
     "apollo-upload-client": "^10.0.1",
     "aws-sdk": "^2.470.0",
@@ -15,9 +16,11 @@
     "graphile-utils": "^4.4.0",
     "graphql-binding": "^2.5.1",
     "jsonwebtoken": "^8.5.1",
+    "npm-run-all": "^4.1.5",
     "postgraphile": "^4.4.0",
     "postgraphile-plugin-upload-field": "^1.0.0-alpha.8",
     "react": "^16.8.6",
+    "react-admin": "^2.9.2",
     "react-dom": "^16.8.6",
     "react-scripts": "3.0.1",
     "typeorm": "^0.2.18",
@@ -39,7 +42,6 @@
     "@types/uuid": "^3.4.4",
     "@types/yup": "^0.26.13",
     "cross-env": "^5.2.0",
-    "i": "^0.3.6",
     "npm": "^6.9.0",
     "ts-node": "^8.2.0",
     "typescript": "3.5.1"
@@ -49,7 +51,15 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "migration:create": "cross-env TS_NODE_PROJECT=tsconfig.typeorm.json ts-node ./node_modules/typeorm/cli.js migration:create -f database/typeOrmConfig.ts -d database/migrations/ -n",
+    "migration:generate": "cross-env TS_NODE_PROJECT=tsconfig.typeorm.json ts-node ./node_modules/typeorm/cli.js migration:generate -f database/typeOrmConfig.ts -d database/migrations/ -n ",
+    "schema:sync": "cross-env TS_NODE_PROJECT=tsconfig.typeorm.json ts-node ./node_modules/typeorm/cli.js schema:sync -f database/typeOrmConfig.ts",
+    "migration:run": "cross-env TS_NODE_PROJECT=tsconfig.typeorm.json ts-node ./node_modules/typeorm/cli.js migration:run -f database/typeOrmConfig.ts",
+    "migration:revert": "cross-env TS_NODE_PROJECT=tsconfig.typeorm.json ts-node ./node_modules/typeorm/cli.js migration:revert -f database/typeOrmConfig.ts",
+    "build:graphql": "npm-run-all graphql:generate-typedef graphql:generate-binding",
+    "graphql:generate-typedef": "cross-env TS_NODE_PROJECT=tsconfig.server.json ts-node server/embeddedGraphql/generate-schema-script.ts",
+    "graphql:generate-binding": "graphql-binding --language typescript --input src/bindings/schema.graphql --outputBinding src/bindings/schema.ts && cross-env TS_NODE_PROJECT=tsconfig.typeorm.json ts-node server/embeddedGraphql/bindings/patch-binding.ts"
   },
   "eslintConfig": {
     "extends": "react-app"

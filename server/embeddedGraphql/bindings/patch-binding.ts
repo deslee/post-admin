@@ -9,10 +9,10 @@ type FindAndReplace = {
     replace: string
 }
 
-const fileToPatch = 'server/embeddedGraphql/bindings/generated.ts';
+const fileToPatch = 'src/bindings/schema.ts';
 const findAndReplace: FindAndReplace[] = [
     {
-        find: `import schema from  '..\\generated\\typedef.graphql'`,
+        find: `import * as schema from  './schema.graphql'`,
         replace: ''
     },
     {
